@@ -1,1 +1,126 @@
 
+<!DOCTYPE html>
+<html lang="uk">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Web & Bots Studio</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            padding: 50px;
+        }
+
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+
+
+        h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+    <div class="card">
+        <h2>Замовити Бота 🤖</h2>
+        <form id="orderForm">
+            <input type="text" name="userName" placeholder="Ваше ім'я" required>
+            <input type="email" name="userEmail" placeholder="Email" required>
+            <select name="botType">
+                <option value="telegram">Telegram Бот</option>
+                <option value="viber">Viber Бот</option>
+                <option value="web">Чат-бот для сайту</option>
+            </select>
+            <button type="submit" id="submitBtn">Надіслати запит</button>
+        </form>
+    </div>
+
+
+    <script>
+        const WEBHOOK_URL = 'ВАШ_URL_ВЕБХУКА_З_MAKE';
+
+
+        document.getElementById('orderForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = 'Відправка...';
+            btn.disabled = true;
+
+
+            // Збираємо дані з полів
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+
+
+            try {
+                // Відправка на Make.com
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+
+                if (response.ok) {
+                    alert('Дякуємо! Менеджер зв’яжеться з вами.');
+                    e.target.reset();
+                } else {
+                    alert('Помилка сервера.');
+                }
+            } catch (error) {
+                alert('Не вдалося з’єднатися з Make.');
+            } finally {
+                btn.innerText = 'Надіслати запит';
+                btn.disabled = false;
+            }
+        });
+    </script>
+
+
+</body>
+
+
+</html>
